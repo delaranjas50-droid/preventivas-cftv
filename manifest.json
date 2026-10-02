@@ -1,0 +1,10 @@
+{
+  "name": "Preventivas CFTV",
+  "short_name": "Preventivas",
+  "description": "Sistema de controle de preventivas de CFTV",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#111827",
+  "orientation": "portrait"
+}

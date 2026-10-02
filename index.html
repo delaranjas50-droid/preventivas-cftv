@@ -1,0 +1,1656 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Sistema de Preventivas</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+header {
+    background: #0f172a;
+    color: white;
+    padding: 20px;
+}
+
+header h1 {
+    margin: 0;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
+}
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.card h3 {
+    margin-top: 0;
+    color: #64748b;
+}
+
+.numero {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.formulario {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+}
+
+.campo label {
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.campo input,
+.campo textarea {
+    padding: 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+.largura-total {
+    grid-column: 1 / -1;
+}
+
+button {
+    border: none;
+    border-radius: 8px;
+    padding: 11px 15px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-principal {
+    background: #2563eb;
+    color: white;
+    margin-top: 15px;
+}
+
+.btn-concluir {
+    background: #16a34a;
+    color: white;
+}
+
+.btn-reabrir {
+    background: #f59e0b;
+    color: white;
+}
+
+.btn-editar {
+    background: #475569;
+    color: white;
+}
+
+.btn-excluir {
+    background: #dc2626;
+    color: white;
+}
+
+.filtros {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.filtros input,
+.filtros select {
+    padding: 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+}
+
+.lista {
+    display: grid;
+    gap: 15px;
+}
+
+.preventiva {
+    background: white;
+    padding: 18px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    border-left: 6px solid #f59e0b;
+}
+
+.preventiva.concluida {
+    border-left-color: #16a34a;
+}
+
+.topo {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    align-items: center;
+}
+
+.topo h3 {
+    margin: 0;
+}
+
+.status {
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.status.pendente {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status.concluida {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.info {
+    line-height: 1.7;
+    margin-top: 12px;
+}
+
+.acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+@media (max-width: 700px) {
+
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .largura-total {
+        grid-column: auto;
+    }
+
+    .filtros {
+        grid-template-columns: 1fr;
+    }
+
+    .topo {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .acoes button {
+        width: 100%;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<header>
+
+<div class="container">
+
+<h1>📹 Sistema de Preventivas</h1>
+
+</div>
+
+</header>
+
+
+<div class="container">
+
+
+<section class="dashboard">
+
+<div class="card">
+
+<h3>Total</h3>
+
+<div
+    class="numero"
+    id="total"
+>
+0
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>Pendentes</h3>
+
+<div
+    class="numero"
+    id="pendentes"
+>
+0
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>Concluídas</h3>
+
+<div
+    class="numero"
+    id="concluidas"
+>
+0
+</div>
+
+</div>
+
+</section>
+
+
+
+<section class="formulario">
+
+<h2 id="tituloFormulario">
+➕ Nova preventiva
+</h2>
+
+
+<form id="formulario">
+
+<div class="grid">
+
+
+<div class="campo">
+
+<label>
+Nome do cliente
+</label>
+
+<input
+    id="nome"
+    type="text"
+    required
+>
+
+</div>
+
+
+<div class="campo">
+
+<label>
+Telefone
+</label>
+
+<input
+    id="telefone"
+    type="text"
+>
+
+</div>
+
+
+<div class="campo">
+
+<label>
+Data da preventiva
+</label>
+
+<input
+    id="data"
+    type="date"
+    required
+>
+
+</div>
+
+
+<div class="campo">
+
+<label>
+Quantidade de câmeras
+</label>
+
+<input
+    id="cameras"
+    type="number"
+    min="0"
+>
+
+</div>
+
+
+<div class="campo largura-total">
+
+<label>
+Endereço
+</label>
+
+<input
+    id="endereco"
+    type="text"
+>
+
+</div>
+
+
+<div class="campo largura-total">
+
+<label>
+Observações
+</label>
+
+<textarea
+    id="observacoes"
+></textarea>
+
+</div>
+
+
+</div>
+
+
+<button
+    type="submit"
+    class="btn-principal"
+>
+💾 Salvar preventiva
+</button>
+
+
+</form>
+
+</section>
+
+
+
+<section>
+
+<h2>
+📋 Preventivas
+</h2>
+
+
+<div class="filtros">
+
+<input
+    id="busca"
+    type="text"
+    placeholder="🔎 Buscar cliente ou endereço..."
+>
+
+
+<select id="filtroStatus">
+
+<option value="todos">
+Todos os status
+</option>
+
+<option value="pendente">
+Pendentes
+</option>
+
+<option value="concluida">
+Concluídas
+</option>
+
+</select>
+
+
+<input
+    id="filtroMes"
+    type="month"
+>
+
+</div>
+
+
+<div
+    id="lista"
+    class="lista"
+></div>
+
+
+</section>
+
+
+</div>
+
+
+
+<script>
+
+
+/* ==========================================
+   SUPABASE
+========================================== */
+
+
+const SUPABASE_URL =
+"https://jipelbndqkgykgtctxtt.supabase.co";
+
+
+/*
+COLOQUE AQUI A MESMA PUBLISHABLE KEY
+QUE JÁ FUNCIONOU NO SEU SISTEMA.
+*/
+
+
+const SUPABASE_KEY =
+"sb_publishable_ng73CAQQa60Tl7afiTIJfQ_NVxPQFbx";
+
+
+const API =
+SUPABASE_URL +
+"/rest/v1/PREVENTIVA";
+
+
+const HEADERS = {
+
+"apikey":
+SUPABASE_KEY,
+
+"Authorization":
+"Bearer " + SUPABASE_KEY,
+
+"Content-Type":
+"application/json"
+
+};
+
+
+let preventivas = [];
+
+
+/* ==========================================
+   ESCAPAR TEXTO
+========================================== */
+
+
+function escapar(valor) {
+
+return String(valor ?? "")
+
+.replaceAll("&", "&amp;")
+.replaceAll("<", "&lt;")
+.replaceAll(">", "&gt;")
+.replaceAll('"', "&quot;")
+.replaceAll("'", "&#039;");
+
+}
+
+
+/* ==========================================
+   CRIAR FILTRO ÚNICO DA PREVENTIVA
+========================================== */
+
+
+/*
+Como suas linhas atuais possuem ID nulo,
+vamos localizar a linha usando os dados
+da própria preventiva.
+
+Isso evita o problema:
+id=eq.null
+*/
+
+
+function filtroPreventiva(item) {
+
+const partes = [];
+
+
+partes.push(
+"nome=eq." +
+encodeURIComponent(
+item.nome ?? ""
+)
+);
+
+
+partes.push(
+"data=eq." +
+encodeURIComponent(
+item.data ?? ""
+)
+);
+
+
+partes.push(
+"telefone=eq." +
+encodeURIComponent(
+item.telefone ?? ""
+)
+);
+
+
+partes.push(
+"cameras=eq." +
+encodeURIComponent(
+String(
+item.cameras ?? 0
+)
+)
+);
+
+
+partes.push(
+"endereco=eq." +
+encodeURIComponent(
+item.endereco ?? ""
+)
+);
+
+
+partes.push(
+"observacoes=eq." +
+encodeURIComponent(
+item.observacoes ?? ""
+)
+);
+
+
+return partes.join("&");
+
+}
+
+
+/* ==========================================
+   CARREGAR
+========================================== */
+
+
+async function carregar() {
+
+try {
+
+const resposta =
+await fetch(
+
+API +
+"?select=*&order=data.asc",
+
+{
+
+method:
+"GET",
+
+headers:
+HEADERS
+
+}
+
+);
+
+
+const texto =
+await resposta.text();
+
+
+if (!resposta.ok) {
+
+throw new Error(
+
+"HTTP " +
+resposta.status +
+"\n\n" +
+texto
+
+);
+
+}
+
+
+preventivas =
+texto
+? JSON.parse(texto)
+: [];
+
+
+renderizar();
+
+
+}
+
+catch (erro) {
+
+console.error(erro);
+
+alert(
+
+"Erro ao carregar preventivas:\n\n" +
+erro.message
+
+);
+
+}
+
+}
+
+
+/* ==========================================
+   SALVAR
+========================================== */
+
+
+document
+.getElementById("formulario")
+.addEventListener(
+"submit",
+salvar
+);
+
+
+async function salvar(event) {
+
+event.preventDefault();
+
+
+const dados = {
+
+nome:
+document
+.getElementById("nome")
+.value
+.trim(),
+
+telefone:
+document
+.getElementById("telefone")
+.value
+.trim(),
+
+data:
+document
+.getElementById("data")
+.value,
+
+cameras:
+Number(
+document
+.getElementById("cameras")
+.value
+) || 0,
+
+endereco:
+document
+.getElementById("endereco")
+.value
+.trim(),
+
+observacoes:
+document
+.getElementById("observacoes")
+.value
+.trim(),
+
+status:
+"pendente"
+
+};
+
+
+try {
+
+const resposta =
+await fetch(
+
+API,
+
+{
+
+method:
+"POST",
+
+headers: {
+
+...HEADERS,
+
+"Prefer":
+"return=representation"
+
+},
+
+body:
+JSON.stringify(dados)
+
+}
+
+);
+
+
+const texto =
+await resposta.text();
+
+
+if (!resposta.ok) {
+
+throw new Error(
+
+"HTTP " +
+resposta.status +
+"\n\n" +
+texto
+
+);
+
+}
+
+
+limparFormulario();
+
+await carregar();
+
+
+alert(
+"Preventiva cadastrada com sucesso!"
+);
+
+
+}
+
+catch (erro) {
+
+console.error(erro);
+
+alert(
+
+"Erro ao salvar:\n\n" +
+erro.message
+
+);
+
+}
+
+}
+
+
+/* ==========================================
+   ALTERAR STATUS
+========================================== */
+
+
+async function alterarStatus(
+item,
+novoStatus
+) {
+
+try {
+
+
+const filtro =
+filtroPreventiva(item);
+
+
+const resposta =
+await fetch(
+
+API +
+"?" +
+filtro,
+
+{
+
+method:
+"PATCH",
+
+headers: {
+
+...HEADERS,
+
+"Prefer":
+"return=representation"
+
+},
+
+body:
+JSON.stringify({
+
+status:
+novoStatus
+
+})
+
+}
+
+);
+
+
+const texto =
+await resposta.text();
+
+
+if (!resposta.ok) {
+
+throw new Error(
+
+"HTTP " +
+resposta.status +
+"\n\n" +
+texto
+
+);
+
+}
+
+
+let resultado = [];
+
+
+if (texto) {
+
+resultado =
+JSON.parse(texto);
+
+}
+
+
+if (
+Array.isArray(resultado) &&
+resultado.length === 0
+) {
+
+throw new Error(
+
+"Nenhuma linha foi encontrada para alterar."
+
+);
+
+}
+
+
+await carregar();
+
+
+}
+
+catch (erro) {
+
+console.error(erro);
+
+alert(
+
+"Erro ao alterar status:\n\n" +
+erro.message
+
+);
+
+}
+
+}
+
+
+/* ==========================================
+   EXCLUIR
+========================================== */
+
+
+async function excluir(item) {
+
+
+const confirmar =
+confirm(
+
+"Você tem certeza que deseja excluir esta preventiva?"
+
+);
+
+
+if (!confirmar) {
+
+return;
+
+}
+
+
+try {
+
+
+const filtro =
+filtroPreventiva(item);
+
+
+const resposta =
+await fetch(
+
+API +
+"?" +
+filtro,
+
+{
+
+method:
+"DELETE",
+
+headers: {
+
+...HEADERS,
+
+"Prefer":
+"return=representation"
+
+}
+
+}
+
+);
+
+
+const texto =
+await resposta.text();
+
+
+if (!resposta.ok) {
+
+throw new Error(
+
+"HTTP " +
+resposta.status +
+"\n\n" +
+texto
+
+);
+
+}
+
+
+let resultado = [];
+
+
+if (texto) {
+
+resultado =
+JSON.parse(texto);
+
+}
+
+
+if (
+Array.isArray(resultado) &&
+resultado.length === 0
+) {
+
+throw new Error(
+
+"Nenhuma linha foi encontrada para excluir."
+
+);
+
+}
+
+
+await carregar();
+
+
+alert(
+"Preventiva excluída com sucesso!"
+);
+
+
+}
+
+catch (erro) {
+
+console.error(erro);
+
+alert(
+
+"Erro ao excluir:\n\n" +
+erro.message
+
+);
+
+}
+
+}
+
+
+/* ==========================================
+   EDITAR
+========================================== */
+
+
+function editar(item) {
+
+
+document
+.getElementById("nome")
+.value =
+item.nome || "";
+
+
+document
+.getElementById("telefone")
+.value =
+item.telefone || "";
+
+
+document
+.getElementById("data")
+.value =
+item.data || "";
+
+
+document
+.getElementById("cameras")
+.value =
+item.cameras ?? "";
+
+
+document
+.getElementById("endereco")
+.value =
+item.endereco || "";
+
+
+document
+.getElementById("observacoes")
+.value =
+item.observacoes || "";
+
+
+document
+.getElementById("tituloFormulario")
+.textContent =
+"✏️ Editar preventiva";
+
+
+/*
+Guardar a linha que está sendo editada.
+*/
+
+window.preventivaEditando =
+item;
+
+
+window.scrollTo({
+
+top: 0,
+
+behavior:
+"smooth"
+
+});
+
+}
+
+
+/* ==========================================
+   SALVAR EDIÇÃO
+========================================== */
+
+
+document
+.getElementById("formulario")
+.addEventListener(
+"submit",
+async function(event) {
+
+
+if (!window.preventivaEditando) {
+
+return;
+
+}
+
+
+event.preventDefault();
+
+
+const antiga =
+window.preventivaEditando;
+
+
+const nova = {
+
+nome:
+document
+.getElementById("nome")
+.value
+.trim(),
+
+telefone:
+document
+.getElementById("telefone")
+.value
+.trim(),
+
+data:
+document
+.getElementById("data")
+.value,
+
+cameras:
+Number(
+document
+.getElementById("cameras")
+.value
+) || 0,
+
+endereco:
+document
+.getElementById("endereco")
+.value
+.trim(),
+
+observacoes:
+document
+.getElementById("observacoes")
+.value
+.trim()
+
+};
+
+
+try {
+
+
+const resposta =
+await fetch(
+
+API +
+"?" +
+filtroPreventiva(antiga),
+
+{
+
+method:
+"PATCH",
+
+headers: {
+
+...HEADERS,
+
+"Prefer":
+"return=representation"
+
+},
+
+body:
+JSON.stringify(nova)
+
+}
+
+);
+
+
+const texto =
+await resposta.text();
+
+
+if (!resposta.ok) {
+
+throw new Error(
+
+"HTTP " +
+resposta.status +
+"\n\n" +
+texto
+
+);
+
+}
+
+
+window.preventivaEditando =
+null;
+
+
+limparFormulario();
+
+await carregar();
+
+
+alert(
+"Preventiva alterada com sucesso!"
+);
+
+
+}
+
+catch (erro) {
+
+console.error(erro);
+
+alert(
+
+"Erro ao editar:\n\n" +
+erro.message
+
+);
+
+}
+
+});
+
+
+/* ==========================================
+   LIMPAR
+========================================== */
+
+
+function limparFormulario() {
+
+document
+.getElementById("formulario")
+.reset();
+
+
+window.preventivaEditando =
+null;
+
+
+document
+.getElementById("tituloFormulario")
+.textContent =
+"➕ Nova preventiva";
+
+}
+
+
+/* ==========================================
+   RENDERIZAR
+========================================== */
+
+
+function renderizar() {
+
+
+const busca =
+document
+.getElementById("busca")
+.value
+.toLowerCase()
+.trim();
+
+
+const filtroStatus =
+document
+.getElementById("filtroStatus")
+.value;
+
+
+const filtroMes =
+document
+.getElementById("filtroMes")
+.value;
+
+
+const filtradas =
+preventivas.filter(
+
+item => {
+
+
+const texto =
+
+(
+item.nome || ""
+) +
+" " +
+(
+item.endereco || ""
+);
+
+
+const buscaOk =
+!busca ||
+texto
+.toLowerCase()
+.includes(busca);
+
+
+const statusOk =
+filtroStatus === "todos" ||
+item.status === filtroStatus;
+
+
+const mesOk =
+!filtroMes ||
+(
+item.data || ""
+)
+.startsWith(
+filtroMes
+);
+
+
+return (
+buscaOk &&
+statusOk &&
+mesOk
+);
+
+}
+
+);
+
+
+/* DASHBOARD */
+
+
+document
+.getElementById("total")
+.textContent =
+preventivas.length;
+
+
+document
+.getElementById("pendentes")
+.textContent =
+
+preventivas.filter(
+
+p =>
+p.status ===
+"pendente"
+
+).length;
+
+
+document
+.getElementById("concluidas")
+.textContent =
+
+preventivas.filter(
+
+p =>
+p.status ===
+"concluida"
+
+).length;
+
+
+/* LISTA */
+
+
+const lista =
+document
+.getElementById("lista");
+
+
+if (
+filtradas.length === 0
+) {
+
+lista.innerHTML =
+
+`
+<div class="card">
+Nenhuma preventiva encontrada.
+</div>
+`;
+
+return;
+
+}
+
+
+lista.innerHTML =
+
+filtradas.map(
+
+(item, indice) => {
+
+
+const concluida =
+item.status ===
+"concluida";
+
+
+return `
+
+<div class="
+preventiva
+${concluida
+? "concluida"
+: ""}
+">
+
+
+<div class="topo">
+
+
+<h3>
+${escapar(item.nome)}
+</h3>
+
+
+<span class="
+status
+${
+concluida
+? "concluida"
+: "pendente"
+}
+">
+
+${
+concluida
+? "✓ Concluída"
+: "⏳ Pendente"
+}
+
+</span>
+
+
+</div>
+
+
+<div class="info">
+
+📅
+<strong>Data:</strong>
+${escapar(item.data)}
+
+<br>
+
+📞
+<strong>Telefone:</strong>
+${escapar(item.telefone)}
+
+<br>
+
+📹
+<strong>Câmeras:</strong>
+${escapar(item.cameras)}
+
+<br>
+
+📍
+<strong>Endereço:</strong>
+${escapar(item.endereco)}
+
+
+${
+item.observacoes
+?
+
+`
+<br>
+
+📝
+<strong>Observações:</strong>
+${escapar(
+item.observacoes
+)}
+`
+
+:
+""
+}
+
+</div>
+
+
+<div class="acoes">
+
+
+${
+concluida
+
+?
+
+`
+<button
+class="btn-reabrir"
+onclick="alterarStatus(
+preventivas[${preventivas.indexOf(item)}],
+'pendente'
+)"
+>
+↩ Reabrir
+</button>
+`
+
+:
+
+`
+<button
+class="btn-concluir"
+onclick="alterarStatus(
+preventivas[${preventivas.indexOf(item)}],
+'concluida'
+)"
+>
+✓ Concluir
+</button>
+`
+
+}
+
+
+<button
+class="btn-editar"
+onclick="editar(
+preventivas[${preventivas.indexOf(item)}]
+)"
+>
+✏️ Editar
+</button>
+
+
+<button
+class="btn-excluir"
+onclick="excluir(
+preventivas[${preventivas.indexOf(item)}]
+)"
+>
+🗑 Excluir
+</button>
+
+
+</div>
+
+
+</div>
+
+`;
+
+}
+
+).join("");
+
+}
+
+
+/* ==========================================
+   FILTROS
+========================================== */
+
+
+document
+.getElementById("busca")
+.addEventListener(
+"input",
+renderizar
+);
+
+
+document
+.getElementById("filtroStatus")
+.addEventListener(
+"change",
+renderizar
+);
+
+
+document
+.getElementById("filtroMes")
+.addEventListener(
+"change",
+renderizar
+);
+
+
+/* ==========================================
+   INICIAR
+========================================== */
+
+
+carregar();
+
+
+</script>
+
+</body>
+
+</html>
+```
